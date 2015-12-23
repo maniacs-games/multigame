@@ -1,12 +1,14 @@
 # Launching game
 ### Configuration
-This repo must be in the htdocs directory of an Apache server (e.g. MAMP).
+Clone this repo in the htdocs directory of an Apache server (e.g. MAMP).
 
 ### Executing
-* Launch MAMP (on default port - 80).
+* Launch Apache (on default port - 80).
 * Launch Node.js server (communication between dices and board) by executing `node node_server/diceServer.js`
-* Open dice and board with Apache (respectively 127.0.0.1/multigame/dice.html and 127.0.0.1/multigame/)
+* Open dice and board with Apache (respectively <a href="127.0.0.1/multigame/dice.html" target="_blank">127.0.0.1/multigame/dice.html</a> and <a href="127.0.0.1/multigame/" target="_blank">127.0.0.1/multigame/</a>)
 * On board, select your dice color
+
+
 
 
  access Projects/multigame/js/ipAdress and change the adress IP.
