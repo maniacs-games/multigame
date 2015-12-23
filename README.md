@@ -8,7 +8,7 @@ Clone this repo in the htdocs directory of an Apache server (e.g. MAMP).
 * Open dice and board with Apache (respectively <a href="http://127.0.0.1/multigame/dice.html" target="_blank">127.0.0.1/multigame/dice.html</a> and <a href="http://127.0.0.1/multigame/" target="_blank">127.0.0.1/multigame/</a>)
 * On the board, select your dice color
 
-_Node: if you need to launch a dice on a smartphone, update `/multigame/js/ipAddress.js` to include your Websocket server's IP address, then open the `/multigame/dice.html` file_
+_Note: if you need to launch a dice on a smartphone, update `/multigame/js/ipAddress.js` to include your Websocket server's IP address, then open the `/multigame/dice.html` file_
 
 ## TODO
 
