@@ -1,4 +1,4 @@
-# Launching game
+## Launching game
 ### Configuration
 Clone this repo in the htdocs directory of an Apache server (e.g. MAMP).
 
@@ -6,43 +6,11 @@ Clone this repo in the htdocs directory of an Apache server (e.g. MAMP).
 * Launch Apache (on default port - 80).
 * Launch Node.js server (communication between dices and board) by executing `node node_server/diceServer.js`
 * Open dice and board with Apache (respectively <a href="http://127.0.0.1/multigame/dice.html" target="_blank">127.0.0.1/multigame/dice.html</a> and <a href="http://127.0.0.1/multigame/" target="_blank">127.0.0.1/multigame/</a>)
-* On board, select your dice color
+* On the board, select your dice color
 
+_Node: if you need to launch a dice on a smartphone, update `/multigame/js/ipAddress.js` to include your Websocket server's IP address, then open the `/multigame/dice.html` file_
 
-
-
- access Projects/multigame/js/ipAdress and change the adress IP.
-
- On Your computer, access localhost and open index.html
- On your phone, connect the dice by accessing the dice.html 
-
-
-
-
-
-
-
-
-<b>PROCEDURE</b>
-Pour faire fonctionner ces scripts, vous devez:
-- Exécuter un serveur node pour les connexions wegsocket
-- Exécuter un serveur web local pour le stockage et l'accessibilité des fichier (HTML, CSS, JS, images, etc..)
-- Connaître l'addresse IP de l'ordinateur sur lequel tournent les serveurs.
-
-
-
-
-<b>Lancement du serveur web</b>
-Il faut lancer MAMP et vérifier que vous tombiez sur une page accessible à l'addresse http://localhost ou http://localhost:8888 si vous fonctionnez sur les port par défaut de MAMP
-Il faut également lancer le serveur NODE en executant la commande "node Node_server/diceServer.js" depuis le terminal. Attention suivant où vous êtes positionnés dans l'arborescence, il faudra peut-etre vous déplacer dnas un autre dossier avec la commande "cd2".
-
-
-
-terminal --> OUVERTURE DU PORT 
- cd /Users/salome/Projects/multigame/Node_server
-  Node diceServer.js
-
-  (ou depuis htdocs si ca ne fonctionne pas, dossier dans MAMP)
+## TODO
 
 <b>Connexion du dé sur iphone et synchronisation avec le jeu correspondant</b>
 Afin de faciliter le pairing entre le dé et l'interface, une palette de couleurs s'affiche lorsque l'utilisateur se connect au serveur, et il suffit de cliquer sur la couleur correspopndante pour faire correspondre le dé avec l'écran en question.
