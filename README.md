@@ -5,7 +5,7 @@ Clone this repo in the htdocs directory of an Apache server (e.g. MAMP).
 ### Executing
 * Launch Apache (on default port - 80).
 * Launch Node.js server (communication between dices and board) by executing `node node_server/diceServer.js`
-* Open dice and board with Apache (respectively <a href="127.0.0.1/multigame/dice.html" target="_blank">127.0.0.1/multigame/dice.html</a> and <a href="127.0.0.1/multigame/" target="_blank">127.0.0.1/multigame/</a>)
+* Open dice and board with Apache (respectively <a href="http://127.0.0.1/multigame/dice.html" target="_blank">127.0.0.1/multigame/dice.html</a> and <a href="http://127.0.0.1/multigame/" target="_blank">127.0.0.1/multigame/</a>)
 * On board, select your dice color
 
 
