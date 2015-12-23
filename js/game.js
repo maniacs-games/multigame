@@ -3,11 +3,6 @@ var Game = function (_colors,_connection){
 	this.colors = _colors;
 	this.assignedColor;
 	this.connection = _connection;
-	//var self = this;
-
-	this.jeu = new App();
-
-
 	this.init();
 }
 
@@ -23,7 +18,7 @@ Game.prototype = {
 			palette.style.backgroundColor = '#'+this.colors[i];
 			palette.style.width = '20px';
 			palette.style.height = '10px';
-			palette.style.float = 'left';	
+			palette.style.float = 'left';
 			this.support.appendChild(palette);
 			palette.addEventListener('click', this.connectDice.bind(this));
 		}
@@ -34,9 +29,9 @@ Game.prototype = {
 		var rgb = e.currentTarget.style.backgroundColor;
 		var a = rgb.split("(")[1].split(")")[0];
 		a = a.split(",");
-		var color = a.map(function(x){            
-		    x = parseInt(x).toString(16);      
-		    return (x.length==1) ? "0"+x : x;  
+		var color = a.map(function(x){
+		    x = parseInt(x).toString(16);
+		    return (x.length==1) ? "0"+x : x;
 		});
 		color = "0x"+color.join("");
 		this.assignedColor = color;
@@ -69,6 +64,7 @@ Game.prototype = {
 
 	init:function(){
 		//used for initiate the game
+    this.jeu = new App(4, 6);
 		this.jeu.setup();
 	}
 
