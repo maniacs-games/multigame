@@ -1,17 +1,19 @@
-<b>OPENING</b>
-Execute MAMP on the 1337 port 
+# Launching game
+### Configuration
+This repo must be in the htdocs directory of an Apache server (e.g. MAMP).
 
-in the terminal , throw the Node servor an access it in:
- cd /Users/salome/Projects/multigame/Node_server
-  Node diceServer.js
-  (if it doesn't work, copy the diceServer.js in the htdocs file in Mamp folder and access it by the same way to connect Mamp and Node in the same port.)
+### Executing
+* Launch MAMP (on default port - 80).
+* Launch Node.js server (communication between dices and board) by executing `node node_server/diceServer.js`
+* Open dice and board with Apache (respectively 127.0.0.1/multigame/dice.html and 127.0.0.1/multigame/)
+* On board, select your dice color
 
 
  access Projects/multigame/js/ipAdress and change the adress IP.
 
  On Your computer, access localhost and open index.html
  On your phone, connect the dice by accessing the dice.html 
- 
+
 
 
 
