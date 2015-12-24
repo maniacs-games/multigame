@@ -277,144 +277,73 @@ App.prototype.playDiceValue = function (row, val) {
 
 
 /**
- * Given a mousemove event, gets coordinates of cursor and highlight the corresponding row
+ * Get row corresponding to given coordinates
+ * Returns null if outside of the board
  */
-App.prototype.highlightRow = function (evt) {
-  if (!evt.offsetX || !evt.offsetY) {
-    // Don't throw error as it can be an edge case
-    return;
-  }
-
-  if (this.animating) {
-    // No highlight during animation
-    return;
-  }
-
-  var d = Math.sqrt((this.boardCenter.x - evt.offsetX) * (this.boardCenter.x - evt.offsetX) + (this.boardCenter.y - evt.offsetY) * (this.boardCenter.y - evt.offsetY));
-
-  var rstep = this.boardRadius / this.R
-    , row = Math.floor(d / rstep);
+App.prototype.getRow = function (x, y) {
+  var d = Math.sqrt((this.boardCenter.x - x) * (this.boardCenter.x - x) + (this.boardCenter.y - y) * (this.boardCenter.y - y))
+    , rstep = this.boardRadius / this.R
+    , row = Math.floor(d / rstep)
+    ;
 
   row = this.R - 1 - row;
 
-  if (row >= 0) {
+  if (row >= 0) { return row; } else { return null; }
+};
+
+
+/**
+ * Given a mousemove event, gets coordinates of cursor and highlight the corresponding row
+ */
+App.prototype.highlightRow = function (evt) {
+  if (!evt.offsetX || !evt.offsetY) { return; }   // Don't throw error as it can be an edge case
+  if (this.animating) { return; }   // No highlight during animation
+
+  var row = this.getRow(evt.offsetX, evt.offsetY);
+
+  if (row !== null) {
     this.drawBoard();
     this.redrawRow(row, { lineWidth: 8 });
   } else {
     this.drawBoard();
   }
-
 };
 
 
+/**
+ * Given a mouse click event, rotate row
+ */
+App.prototype.onMouseClick = function (evt) {
+  if (!evt.offsetX || !evt.offsetY) { return; }   // Don't throw error as it can be an edge case
+  if (this.animating) { return; }   // No highlight during animation
+
+  var row = this.getRow(evt.offsetX, evt.offsetY);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  if (row !== null) {
+    if (this.currentDiceValue === undefined) { return console.log("No dice available to play"); }
+    console.log("Rotating row " + row + ", " + this.currentDiceValue + " steps");
+    this.playDiceValue(row, this.currentDiceValue);
+    delete this.currentDiceValue;   // Can't play same dice twice
+  }
+};
 
 
 /**
- * Show the animation of a rotating row
+ * Update current dice value
  */
+App.prototype.newDiceValue = function (val) {
+  this.currentDiceValue = val;
+};
 
 
+/**
+ * Initialization
+ */
 App.prototype.setup = function() {
   var self = this;
-
-  this.canvas.addEventListener('mousemove', function (e) {
-    self.highlightRow(e);
-  });
-
-
-
-
-  return;
-  //creation de toutes les Cases
-  this.id = 0;
-  //pour avoir les 5 cases par ANGLE
-  this.radiusMax = this.nbrCase*this.caseWidth;
-  while(this.radiusMax>0){
-    for(var i=0;i<360;i+=30){
-      //creation de case
-      this.maCase = new Case(this.centre.x,this.centre.y,this.radiusMax,this.angle,i,this.ctx,this.id,this.caseWidth);
-      this.allCases.push(this.maCase);
-      this.id++;
-    }
-    this.radiusMax-=this.caseWidth;
-  }
-  document.addEventListener("mousemove", this.onMouseMove.bind(this));
-  document.addEventListener("click", this.onMouseClick.bind(this));
-  this.draw();
+  this.drawBoard();
+  this.canvas.addEventListener('mousemove', function (e) { self.highlightRow(e); });
+  this.canvas.addEventListener("click", function (e) { self.onMouseClick(e); });
 }
-
-App.prototype.diceManager = function(val){
-  console.log("dice",val);
-}
-
-App.prototype.onMouseMove = function(e){
-  //JUST FOR ROLLOVER
-  for(var i=0;i<this.allCases.length;i++){
-    this.allCases[i].check(e.pageX,e.pageY);
-  }
-}
-
-App.prototype.onMouseClick = function(e){
-  this.myCase;
-  for(var i=0;i<this.allCases.length;i++){
-    this.myCase = this.allCases[i].check(e.pageX,e.pageY);
-    if(this.myCase!=undefined){
-      break;
-    }
-  }
-  //TWEEN JUST THE SELECTED CIRCLE
-  if(this.myCase!=undefined){
-    for(var i=0;i<this.allCases.length;i++){
-      if(this.allCases[i].radius == this.myCase.radius){
-        this.allCases[i].tween(30);
-      }
-    }
-  }
-}
-
-App.prototype.draw = function() {
-  var self = this;
-  TWEEN.update();
-  this.ctx.clearRect(0,0,this.w,this.h);
-  //dessiner
-  for(var i=0;i<this.allCases.length;i++){
-    this.allCases[i].display();
-  }
-
-  setTimeout(function () {
-    self.draw();
-  }, 200);
-
-  //requestAnimationFrame(this.draw.bind(this	));
-}
-
-
-
 

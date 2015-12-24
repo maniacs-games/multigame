@@ -53,7 +53,7 @@ Game.prototype = {
 	activeFunction:function(val){
 		//called when the user throw the dice
 		//this.jeu.move(val);
-		this.jeu.diceManager(val);
+		this.jeu.newDiceValue(val);
 	},
 
 	passiveFunction:function(val){
