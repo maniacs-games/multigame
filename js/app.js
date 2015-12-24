@@ -128,7 +128,7 @@ App.prototype.printBoard = function () {
 /**
  * Draw one "case"
  */
-App.prototype.drawCase = function (row, sector, color) {
+App.prototype.drawCase = function (row, sector, color, arc) {
   // A, B, C, D are the four points delimiting the "case"
   var rstep = this.boardRadius / this.R
     , rbig = rstep * (this.R - row)
@@ -149,9 +149,9 @@ App.prototype.drawCase = function (row, sector, color) {
   this.ctx.strokeStyle = '#8ec448';
   this.ctx.moveTo(a.x, a.y);
   this.ctx.lineTo(b.x, b.y);
-  this.ctx.lineTo(c.x, c.y);
+  this.ctx.arc(this.boardCenter.x, this.boardCenter.y, rbig, thetasmall - Math.PI / 2, thetabig - Math.PI / 2);
   this.ctx.lineTo(d.x, d.y);
-  this.ctx.lineTo(a.x, a.y);
+  this.ctx.arc(this.boardCenter.x, this.boardCenter.y, rsmall, thetabig - Math.PI / 2, thetasmall - Math.PI / 2, true);
   this.ctx.fill();
   this.ctx.stroke();
   this.ctx.closePath();
