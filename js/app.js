@@ -165,8 +165,11 @@ App.prototype.drawCase = function (row, sector, color) {
 
 /**
  * Draw one "case" given its row, start end end angle (used for animations)
+ * @param {Number} _options.lineWidth Optional, defaults to 1, width of the row's cases' lines
  */
-App.prototype.drawCaseBetweenAngles = function (row, thetasmall, thetabig, color) {
+App.prototype.drawCaseBetweenAngles = function (row, thetasmall, thetabig, color, _options) {
+  var options = _options || {};
+
   // A, B, C, D are the four points delimiting the "case"
   var rstep = this.boardRadius / this.R
     , rbig = rstep * (this.R - row)
@@ -182,6 +185,7 @@ App.prototype.drawCaseBetweenAngles = function (row, thetasmall, thetabig, color
   this.ctx.beginPath();
   this.ctx.fillStyle = color;
   this.ctx.strokeStyle = '#8ec448';
+  this.ctx.lineWidth = options.lineWidth || 1;
   this.ctx.moveTo(a.x, a.y);
   this.ctx.lineTo(b.x, b.y);
   this.ctx.arc(this.boardCenter.x, this.boardCenter.y, rbig, thetasmall - Math.PI / 2, thetabig - Math.PI / 2);
@@ -197,6 +201,8 @@ App.prototype.drawCaseBetweenAngles = function (row, thetasmall, thetabig, color
  * Draw the entire board
  */
 App.prototype.drawBoard = function () {
+  this.ctx.clearRect(0, 0, this.w, this.h);
+
   for (var row = 0; row < this.R; row += 1) {
     for (var sector = 0; sector < this.S; sector += 1) {
       this.drawCase(row, sector, this.board[row][sector]);
@@ -207,16 +213,18 @@ App.prototype.drawBoard = function () {
 
 /**
  * Redraw a specific row
- * @param {Number} options.angleOffset Optional, defaults to 0, clockwise angle offset. Authoritative if both angle and sector offsets are supplied.
- * @param {Number} options.sectorOffset Optional, defaults to 0, sector offset.
+ * @param {Number} _options.angleOffset Optional, defaults to 0, clockwise angle offset. Authoritative if both angle and sector offsets are supplied.
+ * @param {Number} _options.sectorOffset Optional, defaults to 0, sector offset.
+ * @param {Number} _options.lineWidth Optional, defaults to 1, width of the row's cases' lines
  */
-App.prototype.redrawRow = function (row, options) {
+App.prototype.redrawRow = function (row, _options) {
+  var options = _options || {};
   var angleOffset = 0;
   if (options.sectorOffset) { angleOffset = options.sectorOffset * this.getSectorStep(); }
   if (options.angleOffset) { angleOffset = options.angleOffset; }
 
   for (var sector = 0; sector < this.S; sector += 1) {
-    this.drawCaseBetweenAngles(row, this.getThetaSmall(sector) + angleOffset, this.getThetaBig(sector) + angleOffset, this.board[row][sector]);
+    this.drawCaseBetweenAngles(row, this.getThetaSmall(sector) + angleOffset, this.getThetaBig(sector) + angleOffset, this.board[row][sector], { lineWidth: options.lineWidth });
   }
 };
 
@@ -231,13 +239,16 @@ App.prototype.redrawRow = function (row, options) {
 App.prototype.animateRowRotation = function (row, sectorOffset, duration, beginning) {
   var self = this;
   if (beginning === undefined) { beginning = Date.now(); }
-
   self.redrawRow(row, { sectorOffset: easeInOutCubic(Date.now() - beginning, 0, sectorOffset, duration) });
+
+  this.animating = true;   // Keep track that we're animating canvas to avoid repainting due to mouseover
 
   if (Date.now() - beginning < duration) {
     requestAnimationFrame(function () {
       self.animateRowRotation(row, sectorOffset, duration, beginning);
     });
+  } else {
+    this.animating = false;
   }
 };
 
@@ -248,11 +259,51 @@ App.prototype.animateRowRotation = function (row, sectorOffset, duration, beginn
 App.prototype.playDiceValue = function (row, val) {
   var self = this;
 
+  this.drawBoard();   // Remove any highlight before animation
+
+  // Wait for animation to have ended before updating internal board to avoid interferences
+  function checkAnimationDoneAndUpdateBoard () {
+    if (! self.animating) {
+      self.rotateBoard(row, val);
+      self.drawBoard();
+    } else {
+      requestAnimationFrame(checkAnimationDoneAndUpdateBoard);
+    }
+  }
+
   this.animateRowRotation(row, val, this.animationsDuration);
-  setTimeout(function () {
-    self.rotateBoard(row, val);
-    self.drawBoard();
-  }, this.animationsDuration * 1.2);   // Need to wait 20% longer to make sure animation is done and not impacted by internal structure rotation. Not very clean ...
+  setTimeout(checkAnimationDoneAndUpdateBoard, this.animationsDuration);
+};
+
+
+/**
+ * Given a mousemove event, gets coordinates of cursor and highlight the corresponding row
+ */
+App.prototype.highlightRow = function (evt) {
+  if (!evt.offsetX || !evt.offsetY) {
+    // Don't throw error as it can be an edge case
+    return;
+  }
+
+  if (this.animating) {
+    // No highlight during animation
+    return;
+  }
+
+  var d = Math.sqrt((this.boardCenter.x - evt.offsetX) * (this.boardCenter.x - evt.offsetX) + (this.boardCenter.y - evt.offsetY) * (this.boardCenter.y - evt.offsetY));
+
+  var rstep = this.boardRadius / this.R
+    , row = Math.floor(d / rstep);
+
+  row = this.R - 1 - row;
+
+  if (row >= 0) {
+    this.drawBoard();
+    this.redrawRow(row, { lineWidth: 8 });
+  } else {
+    this.drawBoard();
+  }
+
 };
 
 
@@ -291,6 +342,15 @@ App.prototype.playDiceValue = function (row, val) {
 
 
 App.prototype.setup = function() {
+  var self = this;
+
+  this.canvas.addEventListener('mousemove', function (e) {
+    self.highlightRow(e);
+  });
+
+
+
+
   return;
   //creation de toutes les Cases
   this.id = 0;
