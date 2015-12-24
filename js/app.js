@@ -17,12 +17,19 @@ function shuffle (array) {
 
 
 /**
- * Deep copy a double entry array
+ * Ease in and out cubic tweening function
+ * @param {Number} t current time
+ * @param {Number} b start value
+ * @param {Number} c change in value
+ * @param {Number} d duration
  */
-function deepCopy (array) {
-  var res = [];
-  for (var i = 0; i < array.length; i += 1) {}
-}
+function easeInOutCubic (t, b, c, d) {
+	t /= d/2;
+	if (t < 1) return c/2*t*t*t + b;
+	t -= 2;
+	return c/2*(t*t*t + 2) + b;
+};
+
 
 
 /**
@@ -137,14 +144,16 @@ App.prototype.printBoard = function () {
 /**
  * Get thetasmall/thetabig - the start and end angles - for a sector
  */
+App.prototype.getSectorStep = function () {
+  return (360 / this.S) * Math.PI / 180;
+};
+
 App.prototype.getThetaSmall = function (sector) {
-  var thetastep = (360 / this.S) * Math.PI / 180 , thetasmall = sector * thetastep;
-  return thetasmall;
+  return sector * this.getSectorStep();
 };
 
 App.prototype.getThetaBig = function (sector) {
-  var thetastep = (360 / this.S) * Math.PI / 180 , thetabig = (sector + 1) * thetastep;
-  return thetabig;
+  return (sector + 1) * this.getSectorStep();
 };
 
 
@@ -196,6 +205,76 @@ App.prototype.drawBoard = function () {
     }
   }
 };
+
+
+/**
+ * Redraw a specific row
+ * @param {Number} options.angleOffset Optional, defaults to 0, clockwise angle offset. Authoritative if both angle and sector offsets are supplied.
+ * @param {Number} options.sectorOffset Optional, defaults to 0, sector offset.
+ */
+App.prototype.redrawRow = function (row, options) {
+  var angleOffset = 0;
+  if (options.sectorOffset) { angleOffset = options.sectorOffset * this.getSectorStep(); }
+  if (options.angleOffset) { angleOffset = options.angleOffset; }
+
+  for (var sector = 0; sector < this.S; sector += 1) {
+    this.drawCaseBetweenAngles(row, this.getThetaSmall(sector) + angleOffset, this.getThetaBig(sector) + angleOffset, this.board[row][sector]);
+  }
+};
+
+
+/**
+ * Animate row rotation from current position to sector offset for the given duration
+ * @param {Number} row Row to animate
+ * @param {Number} sectorOffset How many sectors should the row move to, clockwise
+ * @param {Number} duration Duration of animation
+ * @param {Number} beginning INTERNAL, don't supply it
+ */
+App.prototype.animateRowRotation = function (row, sectorOffset, duration, beginning) {
+  var self = this;
+  if (beginning === undefined) { beginning = Date.now(); }
+
+  //self.redrawRow(row, { sectorOffset: sectorOffset * (Date.now() - beginning) / duration });
+  self.redrawRow(row, { sectorOffset: easeInOutCubic(Date.now() - beginning, 0, sectorOffset, duration) });
+
+  if (Date.now() - beginning < duration) {
+    requestAnimationFrame(function () {
+      self.animateRowRotation(row, sectorOffset, duration, beginning);
+    });
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /**
