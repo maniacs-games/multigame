@@ -128,7 +128,7 @@ App.prototype.printBoard = function () {
 /**
  * Draw one "case"
  */
-App.prototype.drawCase = function (row, sector, color, arc) {
+App.prototype.drawCase = function (row, sector, color) {
   // A, B, C, D are the four points delimiting the "case"
   var rstep = this.boardRadius / this.R
     , rbig = rstep * (this.R - row)
@@ -155,6 +155,18 @@ App.prototype.drawCase = function (row, sector, color, arc) {
   this.ctx.fill();
   this.ctx.stroke();
   this.ctx.closePath();
+};
+
+
+/**
+ * Draw the entire board
+ */
+App.prototype.drawBoard = function () {
+  for (var row = 0; row < this.R; row += 1) {
+    for (var sector = 0; sector < this.S; sector += 1) {
+      this.drawCase(row, sector, this.board[row][sector]);
+    }
+  }
 };
 
 
