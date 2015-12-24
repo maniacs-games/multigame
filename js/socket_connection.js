@@ -15,7 +15,7 @@ window.WebSocket = window.WebSocket || window.MozWebSocket;
 
 //si le navigateur n'accepte pas les websocket
 if (!window.WebSocket) {
-      	alert("Il faut utiliser un autre navigateur. Chrome par exemple.");
+      	console.log("Il faut utiliser un autre navigateur. Chrome par exemple.");
 		
 }else{
 
@@ -28,8 +28,8 @@ if (!window.WebSocket) {
 	}
 	
 	connection.onerror = function(error){
-		//on alert une erreur
-		alert("Il y a un problème avec la connection au serveur. Vérifiez l'IP ou le PORT...");
+		//on logge une erreur
+		console.log("Il y a un problème avec la connection au serveur. Vérifiez l'IP ou le PORT...");
 	}
 	
 	connection.onmessage = function(message){
@@ -37,7 +37,7 @@ if (!window.WebSocket) {
 		 try {
             var json = JSON.parse(message.data);
         } catch (e) {
-            alert("Le fichier JSON semble être mal formé");
+            console.log("Le fichier JSON semble être mal formé");
 			return;
         }
 		
@@ -57,10 +57,10 @@ if (!window.WebSocket) {
 			case 'deconnexion':
 				//console.log("déconnection de l'utilisateur "+json.user);
 				if(json.featuring!='dice'){
-					alert("déconnexion de l'utilisateur "+json.user);
+					console.log("déconnexion de l'utilisateur "+json.user);
 
 				}else if(json.featuring =='dice' && json.user == connectedDice){
-					//alert("the connected dice is disconnected");
+					//console.log("the connected dice is disconnected");
 					//-> reload the page
 					window.location.reload();
 				}
@@ -72,7 +72,7 @@ if (!window.WebSocket) {
 				console.log("READY");
 			break;
 			case 'reload':
-				alert("you need to reload the game and the dice");
+				console.log("you need to reload the game and the dice");
 			break;
 		}
 	}

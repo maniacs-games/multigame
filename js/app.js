@@ -107,6 +107,7 @@ App.prototype = {
     });
   },
 
+
   /**
    * For debugging, log board state on console
    */
@@ -121,7 +122,9 @@ App.prototype = {
     }
   },
 
-	setup: function(){
+
+	setup: function() {
+    return;
 		//creation de toutes les Cases
 		 this.id = 0;
 		//pour avoir les 5 cases par ANGLE
