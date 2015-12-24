@@ -17,6 +17,15 @@ function shuffle (array) {
 
 
 /**
+ * Deep copy a double entry array
+ */
+function deepCopy (array) {
+  var res = [];
+  for (var i = 0; i < array.length; i += 1) {}
+}
+
+
+/**
  * Create a new board with R rows and S sectors
  */
 var App = function (R, S) {
@@ -126,16 +135,35 @@ App.prototype.printBoard = function () {
 
 
 /**
- * Draw one "case"
+ * Get thetasmall/thetabig - the start and end angles - for a sector
+ */
+App.prototype.getThetaSmall = function (sector) {
+  var thetastep = (360 / this.S) * Math.PI / 180 , thetasmall = sector * thetastep;
+  return thetasmall;
+};
+
+App.prototype.getThetaBig = function (sector) {
+  var thetastep = (360 / this.S) * Math.PI / 180 , thetabig = (sector + 1) * thetastep;
+  return thetabig;
+};
+
+
+/**
+ * Draw one "case" given its row and sector
  */
 App.prototype.drawCase = function (row, sector, color) {
+  this.drawCaseBetweenAngles(row, this.getThetaSmall(sector), this.getThetaBig(sector), color);
+};
+
+
+/**
+ * Draw one "case" given its row, start end end angle (used for animations)
+ */
+App.prototype.drawCaseBetweenAngles = function (row, thetasmall, thetabig, color) {
   // A, B, C, D are the four points delimiting the "case"
   var rstep = this.boardRadius / this.R
     , rbig = rstep * (this.R - row)
     , rsmall = rstep * (this.R - row - 1)
-    , thetastep = (360 / this.S) * Math.PI / 180
-    , thetasmall = sector * thetastep
-    , thetabig = (sector + 1) * thetastep
     , ts_vector = { x: Math.sin(thetasmall), y: - Math.cos(thetasmall) }
     , tb_vector = { x: Math.sin(thetabig), y: - Math.cos(thetabig) }
     , a = { x: this.boardCenter.x + rsmall * ts_vector.x, y: this.boardCenter.y + rsmall * ts_vector.y }
@@ -168,6 +196,11 @@ App.prototype.drawBoard = function () {
     }
   }
 };
+
+
+/**
+ * Show the animation of a rotating row
+ */
 
 
 App.prototype.setup = function() {

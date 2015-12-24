@@ -64,7 +64,7 @@ Game.prototype = {
 
 	init:function(){
 		//used for initiate the game
-    this.jeu = new App(4, 12);
+    this.jeu = new App(4, 6);
 		this.jeu.setup();
 	}
 
