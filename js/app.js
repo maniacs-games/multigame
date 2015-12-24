@@ -60,10 +60,6 @@ var App = function (R, S) {
     this.playersPositions[App.players[j]] = { row: 0, s: posishuns[j] };
   }
 
-
-
-
-
   // Rendering, not the right place to put it but okay for the scope of this project
 	this.w 				= window.innerWidth;
 	this.h 				= window.innerHeight;
@@ -74,6 +70,8 @@ var App = function (R, S) {
 
   this.boardRadius = 0.8 * Math.min(this.w, this.h) / 2;
   this.boardCenter = { x: this.w / 2, y: this.h / 2 };
+  this.animationsDuration = 1000;
+
 
 
 	this.angle 			= 30*Math.PI/180;
@@ -234,7 +232,6 @@ App.prototype.animateRowRotation = function (row, sectorOffset, duration, beginn
   var self = this;
   if (beginning === undefined) { beginning = Date.now(); }
 
-  //self.redrawRow(row, { sectorOffset: sectorOffset * (Date.now() - beginning) / duration });
   self.redrawRow(row, { sectorOffset: easeInOutCubic(Date.now() - beginning, 0, sectorOffset, duration) });
 
   if (Date.now() - beginning < duration) {
@@ -245,7 +242,18 @@ App.prototype.animateRowRotation = function (row, sectorOffset, duration, beginn
 };
 
 
+/**
+ * Play dice value on a given row (updates internal state and animates the row)
+ */
+App.prototype.playDiceValue = function (row, val) {
+  var self = this;
 
+  this.animateRowRotation(row, val, this.animationsDuration);
+  setTimeout(function () {
+    self.rotateBoard(row, val);
+    self.drawBoard();
+  }, this.animationsDuration * 1.2);   // Need to wait 20% longer to make sure animation is done and not impacted by internal structure rotation. Not very clean ...
+};
 
 
 
