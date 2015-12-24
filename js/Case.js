@@ -37,7 +37,7 @@ Case.prototype= {
 			angle = angle - this.rotation.x*180/Math.PI;
 			if(angle<0){
 				angle+=360;
-				//this.rotation.x-=360*Math.PI/180; 
+				//this.rotation.x-=360*Math.PI/180;
 			}
 		var dist = this.getDistance(this.x,this.y,x,y);
 		if(angle>=this.angleDepart*180/Math.PI && angle<=this.angleDepart*180/Math.PI+this.angle*180/Math.PI && dist<this.radius && dist>(this.radius-this.caseWidth)){
@@ -53,7 +53,7 @@ Case.prototype= {
 	getDistance:function(x1,y1,x2,y2){
 		return Math.sqrt( (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2) );
 	},
-	/* 
+	/*
 		Récupérer l'angle entre 2 points en radian
 	*/
 	getAngle:function(x1,y1,x2,y2){

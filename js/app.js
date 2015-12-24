@@ -56,6 +56,10 @@ var App = function (R, S) {
 	this.canvas.height 	= this.h;
 	this.ctx 			= this.canvas.getContext('2d');
 
+  this.boardRadius = 0.8 * Math.min(this.w, this.h) / 2;
+  this.boardCenter = { x: this.w / 2, y: this.h / 2 };
+
+
 	this.angle 			= 30*Math.PI/180;
 	this.caseWidth 		= 70;
 	this.nbrCase		= 5;
@@ -103,7 +107,7 @@ App.prototype.rotateBoard = function (row, val) {
       console.log(player + ' won! INCREDIBUL!!!');
     }
   });
-}
+};
 
 
 /**
@@ -118,7 +122,40 @@ App.prototype.printBoard = function () {
     }
     console.log(msg);
   }
-}
+};
+
+
+/**
+ * Draw one "case"
+ */
+App.prototype.drawCase = function (row, sector, color) {
+  // A, B, C, D are the four points delimiting the "case"
+  var rstep = this.boardRadius / this.R
+    , rbig = rstep * (this.R - row)
+    , rsmall = rstep * (this.R - row - 1)
+    , thetastep = (360 / this.S) * Math.PI / 180
+    , thetasmall = sector * thetastep
+    , thetabig = (sector + 1) * thetastep
+    , ts_vector = { x: Math.sin(thetasmall), y: - Math.cos(thetasmall) }
+    , tb_vector = { x: Math.sin(thetabig), y: - Math.cos(thetabig) }
+    , a = { x: this.boardCenter.x + rsmall * ts_vector.x, y: this.boardCenter.y + rsmall * ts_vector.y }
+    , b = { x: this.boardCenter.x + rbig * ts_vector.x, y: this.boardCenter.y + rbig * ts_vector.y }
+    , c = { x: this.boardCenter.x + rbig * tb_vector.x, y: this.boardCenter.y + rbig * tb_vector.y }
+    , d = { x: this.boardCenter.x + rsmall * tb_vector.x, y: this.boardCenter.y + rsmall * tb_vector.y }
+    ;
+
+  this.ctx.beginPath();
+  this.ctx.fillStyle = color;
+  this.ctx.strokeStyle = '#8ec448';
+  this.ctx.moveTo(a.x, a.y);
+  this.ctx.lineTo(b.x, b.y);
+  this.ctx.lineTo(c.x, c.y);
+  this.ctx.lineTo(d.x, d.y);
+  this.ctx.lineTo(a.x, a.y);
+  this.ctx.fill();
+  this.ctx.stroke();
+  this.ctx.closePath();
+};
 
 
 App.prototype.setup = function() {
