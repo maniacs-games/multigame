@@ -48,7 +48,7 @@ var App = function (R, S) {
 
 
 
-  // Rendering, very bad place to put it
+  // Rendering, not the right place to put it but okay for the scope of this project
 	this.w 				= window.innerWidth;
 	this.h 				= window.innerHeight;
 	this.canvas 		= document.getElementById('canvas');
@@ -56,7 +56,6 @@ var App = function (R, S) {
 	this.canvas.height 	= this.h;
 	this.ctx 			= this.canvas.getContext('2d');
 
-	//utils
 	this.angle 			= 30*Math.PI/180;
 	this.caseWidth 		= 70;
 	this.nbrCase		= 5;
@@ -68,127 +67,125 @@ var App = function (R, S) {
 App.players = ['#ff0000', '#ffffff', '#ff00ff', '#0000ff', '#ffff00', '#00ffff'];
 
 
-App.prototype = {
-  /**
-   * Rotate internal board's row by val sectors, clockwise
-   */
-  rotateBoard: function (row, val) {
-    var self = this;
+/**
+ * Rotate internal board's row by val sectors, clockwise
+ */
+App.prototype.rotateBoard = function (row, val) {
+  var self = this;
 
-    // Rotate row
-    var newRow = [], newJ;
-    for (var j = 0; j < this.board[row].length; j += 1) {
-      newJ = j + val;
-      if (newJ >= this.board[row].length) { newJ -= this.board[row].length; }
-      newRow[newJ] = this.board[row][j];
+  // Rotate row
+  var newRow = [], newJ;
+  for (var j = 0; j < this.board[row].length; j += 1) {
+    newJ = j + val;
+    if (newJ >= this.board[row].length) { newJ -= this.board[row].length; }
+    newRow[newJ] = this.board[row][j];
+  }
+  this.board[row] = newRow;
+
+  // Update tokens positions after rotation
+  App.players.forEach(function (player) {
+    if (self.playersPositions[player].row === row) {
+      self.playersPositions[player].s += val;
+      if (self.playersPositions[player].s >= self.board[row].length) { self.playersPositions[player].s -= self.board[row].length; }
     }
-    this.board[row] = newRow;
+  });
 
-    // Update tokens positions after rotation
-    App.players.forEach(function (player) {
-      if (self.playersPositions[player].row === row) {
-        self.playersPositions[player].s += val;
-        if (self.playersPositions[player].s >= self.board[row].length) { self.playersPositions[player].s -= self.board[row].length; }
-      }
-    });
-
-    // Advance if color match
-    App.players.forEach(function (player) {
-      if (self.board[self.playersPositions[player].row + 1][self.playersPositions[player].s] === player) {
-        self.playersPositions[player].row += 1;
-      }
-    });
-
-    // Check if player won
-    App.players.forEach(function (player) {
-      if (self.playersPositions[player].row === self.R - 1) {
-        console.log(player + ' won! INCREDIBUL!!!');
-      }
-    });
-  },
-
-
-  /**
-   * For debugging, log board state on console
-   */
-  printBoard: function () {
-    var msg;
-    for (var i = 0; i < this.board.length; i += 1) {
-      msg = "";
-      for (var j = 0; j < this.board[i].length; j += 1) {
-        msg += this.board[i][j] + "  |  ";
-      }
-      console.log(msg);
+  // Advance if color match
+  App.players.forEach(function (player) {
+    if (self.board[self.playersPositions[player].row + 1][self.playersPositions[player].s] === player) {
+      self.playersPositions[player].row += 1;
     }
-  },
+  });
 
-
-	setup: function() {
-    return;
-		//creation de toutes les Cases
-		 this.id = 0;
-		//pour avoir les 5 cases par ANGLE
-		 this.radiusMax = this.nbrCase*this.caseWidth;
-		while(this.radiusMax>0){
-			for(var i=0;i<360;i+=30){
-				//creation de case
-				 this.maCase = new Case(this.centre.x,this.centre.y,this.radiusMax,this.angle,i,this.ctx,this.id,this.caseWidth);
-				this.allCases.push(this.maCase);
-				this.id++;
-			}
-			this.radiusMax-=this.caseWidth;
-		}
-		document.addEventListener("mousemove", this.onMouseMove.bind(this));
-		document.addEventListener("click", this.onMouseClick.bind(this));
-		this.draw();
-	},
-
-	diceManager:function(val){
-		console.log("dice",val);
-	},
-
-	onMouseMove:function(e){
-		//JUST FOR ROLLOVER
-		for(var i=0;i<this.allCases.length;i++){
-			this.allCases[i].check(e.pageX,e.pageY);
-		}
-	},
-
-	onMouseClick:function(e){
-		this.myCase;
-		for(var i=0;i<this.allCases.length;i++){
-			this.myCase = this.allCases[i].check(e.pageX,e.pageY);
-			if(this.myCase!=undefined){
-				break;
-			}
-		}
-		//TWEEN JUST THE SELECTED CIRCLE
-		if(this.myCase!=undefined){
-			for(var i=0;i<this.allCases.length;i++){
-				if(this.allCases[i].radius == this.myCase.radius){
-					this.allCases[i].tween(30);
-				}
-			}
-		}
-	},
-
-	draw:function(){
-    var self = this;
-		TWEEN.update();
-		this.ctx.clearRect(0,0,this.w,this.h);
-		//dessiner
-		for(var i=0;i<this.allCases.length;i++){
-			this.allCases[i].display();
-		}
-
-    setTimeout(function () {
-      self.draw();
-    }, 200);
-
-		//requestAnimationFrame(this.draw.bind(this	));
-	}
-
-
-
+  // Check if player won
+  App.players.forEach(function (player) {
+    if (self.playersPositions[player].row === self.R - 1) {
+      console.log(player + ' won! INCREDIBUL!!!');
+    }
+  });
 }
+
+
+/**
+ * For debugging, log board state on console
+ */
+App.prototype.printBoard = function () {
+  var msg;
+  for (var i = 0; i < this.board.length; i += 1) {
+    msg = "";
+    for (var j = 0; j < this.board[i].length; j += 1) {
+      msg += this.board[i][j] + "  |  ";
+    }
+    console.log(msg);
+  }
+}
+
+
+App.prototype.setup = function() {
+  return;
+  //creation de toutes les Cases
+  this.id = 0;
+  //pour avoir les 5 cases par ANGLE
+  this.radiusMax = this.nbrCase*this.caseWidth;
+  while(this.radiusMax>0){
+    for(var i=0;i<360;i+=30){
+      //creation de case
+      this.maCase = new Case(this.centre.x,this.centre.y,this.radiusMax,this.angle,i,this.ctx,this.id,this.caseWidth);
+      this.allCases.push(this.maCase);
+      this.id++;
+    }
+    this.radiusMax-=this.caseWidth;
+  }
+  document.addEventListener("mousemove", this.onMouseMove.bind(this));
+  document.addEventListener("click", this.onMouseClick.bind(this));
+  this.draw();
+}
+
+App.prototype.diceManager = function(val){
+  console.log("dice",val);
+}
+
+App.prototype.onMouseMove = function(e){
+  //JUST FOR ROLLOVER
+  for(var i=0;i<this.allCases.length;i++){
+    this.allCases[i].check(e.pageX,e.pageY);
+  }
+}
+
+App.prototype.onMouseClick = function(e){
+  this.myCase;
+  for(var i=0;i<this.allCases.length;i++){
+    this.myCase = this.allCases[i].check(e.pageX,e.pageY);
+    if(this.myCase!=undefined){
+      break;
+    }
+  }
+  //TWEEN JUST THE SELECTED CIRCLE
+  if(this.myCase!=undefined){
+    for(var i=0;i<this.allCases.length;i++){
+      if(this.allCases[i].radius == this.myCase.radius){
+        this.allCases[i].tween(30);
+      }
+    }
+  }
+}
+
+App.prototype.draw = function() {
+  var self = this;
+  TWEEN.update();
+  this.ctx.clearRect(0,0,this.w,this.h);
+  //dessiner
+  for(var i=0;i<this.allCases.length;i++){
+    this.allCases[i].display();
+  }
+
+  setTimeout(function () {
+    self.draw();
+  }, 200);
+
+  //requestAnimationFrame(this.draw.bind(this	));
+}
+
+
+
 
