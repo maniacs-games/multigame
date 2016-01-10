@@ -34,8 +34,9 @@ function easeInOutCubic (t, b, c, d) {
 
 /**
  * Create a new board with R rows and S sectors
+ + C connection
  */
-var App = function (R, S) {
+var App = function (R, S, C) {
   // Board structure
   if (S % App.players.length !== 0) { throw "Number of sectors must be a multiple of max number of players (" + App.players.length + ")"; }
   this.R = R;
@@ -79,10 +80,12 @@ var App = function (R, S) {
 	this.nbrCase		= 5;
 	this.allCases 		= [];
 	this.centre 		= {"x":window.innerWidth/2,"y":window.innerHeight/2};
+  this.connection = C;
 }
 
 // Players are referenced by their color
 App.players = ['#ff0000', '#ffffff', '#ff00ff', '#0000ff', '#ffff00', '#00ffff'];
+//App.players = ['#ff0000', '#ffffff', '#ff00ff', '#0000ff', '#ffff00', '#00ffff'];
 
 
 /**
@@ -119,6 +122,9 @@ App.prototype.rotateBoard = function (row, val) {
   App.players.forEach(function (player) {
     if (self.playersPositions[player].row === self.R - 1) {
       console.log(player + ' won! INCREDIBUL!!!');
+
+      
+      //coconsole.log(player + ' won! INCREDIBUL!!!');
     }
   });
 };
@@ -184,7 +190,7 @@ App.prototype.drawCaseBetweenAngles = function (row, thetasmall, thetabig, color
 
   this.ctx.beginPath();
   this.ctx.fillStyle = color;
-  this.ctx.strokeStyle = '#8ec448';
+  this.ctx.strokeStyle = '#94ff0a';
   this.ctx.lineWidth = options.lineWidth || 1;
   this.ctx.moveTo(a.x, a.y);
   this.ctx.lineTo(b.x, b.y);
@@ -323,9 +329,21 @@ App.prototype.onMouseClick = function (evt) {
   if (row !== null) {
     if (this.currentDiceValue === undefined) { return console.log("No dice available to play"); }
     console.log("Rotating row " + row + ", " + this.currentDiceValue + " steps");
-    this.playDiceValue(row, this.currentDiceValue);
-    delete this.currentDiceValue;   // Can't play same dice twice
+    //this.playDiceValue(row, this.currentDiceValue);
+    //delete this.currentDiceValue;   // Can't play same dice twice
+
+    //envoyer au serveur 
+    // @ row
+    // @ this.currentDiceValue
+    // @ type rotation
+    this.connection.send(JSON.stringify({row:row,currentDiceValue:this.currentDiceValue,type:'rotate'}));
+    //delete this.currentDiceValue; 
+    console.log("infosend");
   }
+};
+
+App.prototype.activateRotation = function(row,currentDiceValue){
+    this.playDiceValue(row,currentDiceValue);
 };
 
 

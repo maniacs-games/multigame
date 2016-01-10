@@ -61,11 +61,23 @@ Game.prototype = {
 		//this.jeu.moveBack(val);
 
 	},
+	
+
+
+
+   userClickFunction:function(row,currentDiceValue){
+   	    //this.App.activateRotation(row,currentDiceValue);
+   	    this.jeu.activateRotation(row,currentDiceValue);
+   	    console.log("infosendgame");
+		//this.demo.afficherQuiAClicke(username);
+	},
+
+
 
 	init:function(){
 		//used for initiate the game
-    this.jeu = new App(4, 6);
-		this.jeu.setup();
+    this.jeu = new App(5, 6, this.connection);
+	this.jeu.setup();
 	}
 
 }

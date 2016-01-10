@@ -1,0 +1,215 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Cible</title>
+
+<style>
+body{margin:0px;padding:0px;background-color: #000;}
+body
+{
+    height: 2000px; // 1000 keyframes
+}
+
+#wrapper
+{
+    width: 100%;
+    height: 650px;
+    position: fixed;
+    z-index: 5;
+
+  
+    overflow:hidden;
+}
+
+#a {
+    position:absolute;
+    
+    width: 200px;
+    height: 200px;
+}
+#b
+{
+    position: fixed;
+    
+   /* width: 200px;
+    height: 200px;*/
+    bottom: 0px;
+    right: 0px;
+}
+
+#c {top:0;
+    position:fixed;
+     background-image:url(data/testsson.png);
+     background-repeat: no-repeat;
+    
+    right:0;
+    width:100%;
+    height:100%;
+}
+
+            
+            #fuseerose {
+				position: absolute;
+		        /*top: 590px;
+				left: 610px;*/
+				 width: 300px;
+                 height: 300px;
+				 bottom: 0px;
+                 right: 0px;
+				
+
+			}
+        
+        #fuseebleuue {
+				position: absolute;
+		        top: 1000px;
+				/*left:500px;*/
+				
+				 width: 300px;
+                 height: 300px;
+				
+			}
+
+            #fixationdelextreme {
+				position: absolute;
+		        top: 30px;
+				/*left:500px;*/
+				
+				 width: 1300px;
+                 height: 800px;
+				
+			}
+
+
+            #fixationdelextreme2 {
+				position: absolute;
+		        top: 600px;
+				/*left:500px;*/
+				
+				 width: 1200px;
+                 height: 2000px;
+				
+			}
+
+
+         #text{
+           position: fixed;
+            z-index: 27;
+          top: 200px;
+           
+             }
+
+             #test {
+    position:fixed;
+    
+    /*background: orange;*/
+    /*background-image:url(data/essai.png);*/
+    /*top:100;
+    left:0;*/
+    width:300px;
+    height:300px;
+
+
+
+
+    
+}
+
+
+</style>
+</head>
+
+<body>
+
+
+<div id="wrapper">
+
+<!-- <img "text" src='data/sonarinfernal.png'>
+ --><!-- <img id"text"  src='data/sonarinfernal.png'> -->
+    <div id="a">
+    <img src='data/fuseebleu.png'>
+    </div>
+    <div id="b">
+      <img src='data/fuseerose.png'>
+           
+    </div>
+</div>
+<div>
+<img id='fixationdelextreme'  src='data/sonarinfernal.png'>
+<img id='fixationdelextreme2' src='data/text.png'>
+</div>
+
+
+<div id="test">
+<!-- <img id src='data/essai.png'> -->
+</div>
+
+
+
+
+
+<img id"fuseebleuue" src='data/fuseebleu.png'>
+<!-- <img id'test' src='data/sonarinfernal.png'> -->
+
+<div id="c"><!-- <img src='data/fuseerose.png'> --></div>
+
+<script src='scripts/jquery-1.11.2.min.js'></script>
+<script src='scripts/jquery.stellar.js'></script>
+
+
+<script>
+	$(function (){
+	$(window).stellar();				
+			});
+var $window = $(window);
+var $a = $('#a');
+var $b = $('#b');
+
+var scroll_max = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+var wrapper_height = $('#wrapper').height();
+var wrapper_width = $('#wrapper').width();
+
+$window.scroll(function() {
+    console.log(scroll_max);
+     console.log($(this).scrollTop());
+    $a.css({
+        'top': ($window.scrollTop() / scroll_max) * wrapper_width,
+        'left': ($window.scrollTop() / scroll_max) * wrapper_width
+    });
+    $b.css({
+        'bottom': ($window.scrollTop() / scroll_max) * wrapper_width,
+        'right': ($window.scrollTop() / scroll_max) * wrapper_width
+    });
+
+
+    $('#c').css({
+        'width': $(this).scrollTop(),
+        'height': $(this).scrollTop()
+    });
+
+
+    // $('#test').css({
+    	
+    //     'width':$(this).scrollTop/2()
+    //     'height':$(this).scrollTop/2()
+    // });
+
+
+
+
+})
+
+
+
+ 
+
+
+</script>
+	
+
+
+
+
+</body>
+</html>

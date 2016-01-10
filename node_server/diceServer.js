@@ -75,6 +75,13 @@ wsServer.on('request', function(request){
 				clients = [];
 			break;
 
+			case 'rotate':
+				for(var name in clients){
+					clients[name].connection.send(JSON.stringify({row:json.row, currentDiceValue:json.currentDiceValue ,type:'userClickRotation'}));
+					console.log("infosenddiceserver");
+				}
+			break;
+
 		}
 
 	});

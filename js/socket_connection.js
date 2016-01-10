@@ -74,6 +74,12 @@ if (!window.WebSocket) {
 			case 'reload':
 				console.log("you need to reload the game and the dice");
 			break;
+
+          case 'userClickRotation':
+          game.userClickFunction(json.row,json.currentDiceValue);
+          console.log("infosendwebsocket");
+          break;
+
 		}
 	}
 	game = new Game(colors,connection);
