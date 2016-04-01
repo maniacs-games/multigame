@@ -101,12 +101,13 @@ body
              }
 
              #test {
-    position:fixed;
+    position:absolute;
     
     /*background: orange;*/
     /*background-image:url(data/essai.png);*/
     /*top:100;
     left:0;*/
+    z-index: 10;
     width:300px;
     height:300px;
 
@@ -117,16 +118,23 @@ body
 }
 
 
+
+
+
+
 </style>
 </head>
 
 <body>
 
 
+<div id="multigame">
+<a href="index.html"> SONAR INFERNAL </a>	
+</div>
+
+
 <div id="wrapper">
 
-<!-- <img "text" src='data/sonarinfernal.png'>
- --><!-- <img id"text"  src='data/sonarinfernal.png'> -->
     <div id="a">
     <img src='data/fuseebleu.png'>
     </div>
@@ -153,6 +161,12 @@ body
 <!-- <img id'test' src='data/sonarinfernal.png'> -->
 
 <div id="c"><!-- <img src='data/fuseerose.png'> --></div>
+
+
+
+
+
+
 
 <script src='scripts/jquery-1.11.2.min.js'></script>
 <script src='scripts/jquery.stellar.js'></script>

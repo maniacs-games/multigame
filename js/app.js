@@ -122,9 +122,11 @@ App.prototype.rotateBoard = function (row, val) {
   App.players.forEach(function (player) {
     if (self.playersPositions[player].row === self.R - 1) {
       console.log(player + ' won! INCREDIBUL!!!');
-
+   
+   alert(player + ' won! INCREDIBUL!!!');
+  
       
-      //coconsole.log(player + ' won! INCREDIBUL!!!');
+      
     }
   });
 };
@@ -337,7 +339,10 @@ App.prototype.onMouseClick = function (evt) {
     // @ this.currentDiceValue
     // @ type rotation
     this.connection.send(JSON.stringify({row:row,currentDiceValue:this.currentDiceValue,type:'rotate'}));
-    //delete this.currentDiceValue; 
+    //delete this.currentDiceValue;
+
+
+   delete this.currentDiceValue;  
     console.log("infosend");
   }
 };
